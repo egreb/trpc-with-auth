@@ -4,7 +4,9 @@
   "version": "1.0.0",
   "description": "todo list with node, trpc and solid-js",
   "scripts": {
-    "dev": "tsx src/server.ts"
+    "dev": "tsx src/server.ts",
+    "build": "tsc",
+    "serve": "node dist/server.js"
   },
   "keywords": [
     "trpc",
