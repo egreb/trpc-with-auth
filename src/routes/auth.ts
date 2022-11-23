@@ -14,6 +14,11 @@ const authRouter = t.router({
   signout: authProcedure.query(({ ctx }) => {
     delete sessions[ctx.session.id];
 
+    ctx.res.setHeader(
+      "Set-Cookie",
+      `trpc-auth=${ctx.session.id}; Secure; HttpOnly; max-age=0;`
+    );
+
     return {
       success: true,
     };
@@ -51,7 +56,7 @@ const authRouter = t.router({
 
       ctx.res.setHeader(
         "Set-Cookie",
-        `trpc-auth=${sessionId} Secure; HttpOnly;`
+        `trpc-auth=${sessionId}; Secure; HttpOnly;`
       );
 
       return {
@@ -65,7 +70,7 @@ const authRouter = t.router({
         password: z.string().min(3).max(255),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input }) => {
       const { username, password } = input;
 
       const user = users.find((x) => x.username === username);

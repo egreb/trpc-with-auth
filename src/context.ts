@@ -1,11 +1,10 @@
-import { inferAsyncReturnType, initTRPC, TRPCError } from "@trpc/server";
+import { inferAsyncReturnType, initTRPC } from "@trpc/server";
 import http from "http";
-import { db } from "./db";
 
 type Request = { req: http.IncomingMessage; res: http.OutgoingMessage };
 
 async function createContext({ req, res }: Request) {
-  return { req, res, db };
+  return { req, res };
 }
 
 type Context = inferAsyncReturnType<typeof createContext>;

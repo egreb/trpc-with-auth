@@ -23,6 +23,7 @@ export const users: Array<User> = [
 const sessions: { [id: string]: Session } = {};
 
 const getSession = (id: string) => {
+  console.log({ id, sessions });
   const session = sessions[id];
   if (!session) return null;
 

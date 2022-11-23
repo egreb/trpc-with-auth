@@ -13,11 +13,9 @@ const getMe = async () => await client.auth.me.query();
 function createStore() {
   const [user, setUser] = createSignal<User | null>(null);
   const { route, setRoute } = router;
-  const [data, mutate] = createResource([route().route], getMe);
+  const [data] = createResource([route().route], getMe);
 
   createEffect(() => {
-    const r = route().route;
-
     if (data.error) {
       setUser(null);
       setRoute({
@@ -35,7 +33,7 @@ function createStore() {
         });
       }
     }
-  });
+  }, route().route);
   return { user };
 }
 

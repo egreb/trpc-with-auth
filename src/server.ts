@@ -1,4 +1,5 @@
 import http from "http";
+import fs from "fs";
 import { createHTTPHandler } from "@trpc/server/adapters/standalone";
 import { authRouter } from "./routes/auth";
 import { t, createContext } from "./context";
@@ -33,7 +34,35 @@ http
       return res.end();
     }
 
-    handler(req, res);
+    if (req.url === "/") {
+      fs.readFile("./client/dist/index.html", (err, fileContent) => {
+        if (err) {
+          console.error("read index.html error:", err);
+        }
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+        return res.end(fileContent);
+      });
+    }
+
+    fs.readFile("./client/dist" + req.url, (err, fileContent) => {
+      let contentType = "text/css";
+      const parts = req.url?.split(".") ?? [];
+
+      console.log({ parts, last: parts[parts.length - 1] });
+      if (parts[parts.length - 1] === "js") {
+        contentType = "application/javascript";
+      }
+      console.log({ url: req.url, contentType });
+      if (!err) {
+        res.writeHead(200, { "Content-Type": contentType + "; charset=utf-8" });
+        return res.end(fileContent);
+      }
+    });
+
+    if (req.url?.startsWith("/api/", 0)) {
+      req.url = req.url.replace("/api", "");
+      handler(req, res);
+    }
   })
   .listen(2020, () => {
     console.log(`listening on port 2020`);

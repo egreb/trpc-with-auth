@@ -8,7 +8,7 @@ import type { AppRouter } from "../../../src/server";
 const client = createTRPCClient<AppRouter>({
   links: [
     httpBatchLink({
-      url: "http://localhost:2020",
+      url: "http://localhost:2020/api",
       fetch(url, options) {
         return fetch(url, {
           ...options,
